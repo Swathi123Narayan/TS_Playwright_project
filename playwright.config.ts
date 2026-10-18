@@ -5,7 +5,7 @@ export default defineConfig({
     testDir: './application_testcases',
 
     use: {
-        channel: 'chrome',
+        // channel: 'chrome',
         headless: false,
         screenshot: 'on',
         trace: 'on',
