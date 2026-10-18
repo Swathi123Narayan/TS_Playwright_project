@@ -1,0 +1,32 @@
+node {
+    def nodeHome = tool 'NodeJS-22'
+    env.PATH = "${nodeHome}/bin:${env.PATH}"
+
+    stage('Checkout') {
+        checkout scm
+    }
+
+    stage('Install Dependencies') {
+        sh 'node --version'
+        sh 'npm --version'
+        sh 'npm ci'
+        sh 'npx playwright install chromium'
+    }
+
+    stage('Run Tests') {
+        if (env.JOB_NAME == 'Playwright Project') {
+            echo 'Running smoke tests'
+            sh 'npx playwright test --grep "@smoke" --reporter=list,html'
+        } else if (env.JOB_NAME == 'Playwright sequential project') {
+            echo 'Running the full test suite'
+            sh 'npx playwright test --reporter=list,html'
+        } else {
+            error "Unknown Jenkins job: ${env.JOB_NAME}"
+        }
+    }
+
+    stage('Publish Results') {
+        archiveArtifacts artifacts: 'playwright-report/**',
+                         allowEmptyArchive: true
+    }
+}
