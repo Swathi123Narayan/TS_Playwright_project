@@ -6,7 +6,7 @@ export default defineConfig({
 
     use: {
         // channel: 'chrome',
-        headless: false,
+        headless: true,
         screenshot: 'on',
         trace: 'on',
         baseURL: 'https://opensource-demo.orangehrmlive.com',
